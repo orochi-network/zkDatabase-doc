@@ -1,15 +1,15 @@
 import Link from "@docusaurus/Link";
 import CodeBlock from "@theme/CodeBlock";
 
-export const ZKDATABASE_GRAPHQL_ENDPOINT =
-  process.env.NODE_ENV === "production"
-    ? "https://api.zkdatabase.org/graphql"
-    : "https://test-serverless.zkdatabase.org/graphql";
+const isProductionBuild = process.env.BUILD_MODE === "production";
 
-export const ZKDATABASE_GUI =
-  process.env.NODE_ENV === "production"
-    ? "https://app.zkdatabase.org/"
-    : "https://test-ui.zkdatabase.org/";
+export const ZKDATABASE_GRAPHQL_ENDPOINT = isProductionBuild
+  ? "https://api.zkdatabase.org/graphql"
+  : "https://test-serverless.zkdatabase.org/graphql";
+
+export const ZKDATABASE_GUI = isProductionBuild
+  ? "https://app.zkdatabase.org/"
+  : "https://test-ui.zkdatabase.org/";
 
 const ZKDATABASE_CODE = `const zkdb = await ZkDatabase.connect({
   userName: "chiro-user",
