@@ -1,0 +1,29 @@
+---
+sidebar_position: 3
+---
+
+import { DatabaseExample } from "@site/src/dynamic";
+
+# Sign-Out
+
+The `signOut` method is used to log out the authenticated user from zkDatabase.
+
+### Definition
+
+```ts
+await zkdb.auth.signOut(): Promise<void>;
+```
+
+### Parameters
+
+- None
+
+### Returns
+
+- A promise that resolves when the user is successfully logged out.
+
+### Example
+
+<DatabaseExample code={`\nawait zkdb.auth.signOut();`} />
+
+This example demonstrates how to sign out the currently authenticated user from zkDatabase.

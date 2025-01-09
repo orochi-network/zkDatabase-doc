@@ -1,0 +1,59 @@
+---
+sidebar_position: 1
+---
+
+import {
+  DatabaseExample,
+  DatabaseGuiLink,
+  EXAMPLE_COLLECTION_CREATE,
+} from "@site/src/dynamic";
+
+# Collection Management
+
+---
+
+## Retrieving a List of Collections
+
+The zkDatabase library provides the `collectionList` method to retrieve a list of all collections within a specified database. This function is particularly useful for administrators and developers looking to understand the database structure, inspect available collections, or perform batch operations across multiple collections.
+
+### Definition
+
+The `collectionList` function is called on a database object, and it returns a promise that resolves to an array of collections.
+
+```typescript
+await zkdb.db(databaseName: string).collectionList(): Promise<string[]>;
+```
+
+### Parameters
+
+- None
+
+### Returns
+
+The `collectionList` method returns a `Promise` that resolves to an array of `string`. Each string represents the name of a collection within the specified database. This list provides insights into the database's structure and can help in planning further operations or analyses.
+
+### Example
+
+Here is an example demonstrating how to retrieve the list of collections from a specified database:
+
+<DatabaseExample
+  auth={true}
+  code={`\nawait zkdb.db('zkdb_test').collectionList()`}
+/>
+
+This snippet, when executed, retrieves all collection names from the `zkdb_test` database.
+
+### Expected Output
+
+The result of the `collectionList` method will be an array containing the names of collections or detailed information about each collection, depending on the implementation specifics. For example:
+
+```javascript
+Collections in zkdb_test: [
+  'users',
+  'products',
+  'orders',
+  // ...other collection names
+]
+```
+
+This document provides a clear and structured explanation for retrieving collections using zkDatabase, ensuring users understand the method's functionality, parameters, and expected outcomes.

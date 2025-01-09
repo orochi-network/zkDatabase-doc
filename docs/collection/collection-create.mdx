@@ -1,0 +1,52 @@
+---
+sidebar_position: 1
+---
+
+import {
+  DatabaseExample,
+  DatabaseGuiLink,
+  EXAMPLE_COLLECTION_CREATE,
+} from "@site/src/dynamic";
+
+# Create a Collection
+
+The zkDatabase library provides the functionality to create a collection, which serves as a structured grouping of documents similar to a table in a relational database. In a zkDatabase, each collection is defined by a schema that allows the representation of data both as human-readable JSON and in a cryptographically provable format suitable for zero-knowledge (ZK) circuits. This dual representation ensures data is both easily manageable and secure, supporting advanced privacy-preserving operations.
+
+### Definition
+
+When creating a collection, you need to specify a schema that dictates the structure and data types of the documents. This schema ensures that all documents within the collection are consistent and integrate seamlessly with cryptographic operations.
+
+```ts
+await zkdb.db(databaseName: string)
+    .collection(collectionName: string)
+    .create(
+      schemaDefinition:Schema,
+      permission: Permission,
+      groupName: string
+    )
+```
+
+### Parameters
+
+- **`schemaDefinition`** (Schema): The predefined structure for the collection, detailing the data types and constraints for its documents, ensuring they meet both usability and cryptographic integrity standards.
+- **`permission`** (Permission): A object that defines the permissions for accessing and manipulating the collection, ensuring proper security measures are met.
+- **`groupName`** (string): The name of the group associated with this collection. It helps categorize or restrict collections to specific groups of users, supporting both organizational needs and security policies.
+
+### Returns
+
+The operation to create a collection will typically return a promise that resolves upon successful establishment of the collection with its specified schema. This confirmation allows for subsequent operations, such as document insertion and queries.
+
+### Example
+
+Here is an example of creating a collection in the zkDatabase:
+
+<DatabaseExample
+  import={`import { CircuitString, UInt64 } from 'o1js';
+import { Schema, ZkDatabase } from 'zkdb';`}
+  auth={true}
+  code={EXAMPLE_COLLECTION_CREATE}
+/>
+
+## Deploy Smart Contract
+
+To incorporate this collection into a blockchain-based application, you may need to use the <DatabaseGuiLink /> to deploy the appropriate smart contract. This enables on-chain management of the collection, ensuring data integrity and supporting zero-knowledge proofs.

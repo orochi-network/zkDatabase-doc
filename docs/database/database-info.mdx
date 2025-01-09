@@ -1,0 +1,31 @@
+---
+sidebar_position: 2
+---
+
+import { DatabaseExample } from "@site/src/dynamic";
+
+# Get Database Information
+
+The `info` method allows you to retrieve important settings related to a specific database, including the public key and Merkle tree height. These settings are crucial for understanding the cryptographic configuration of the database.
+
+#### Syntax
+
+<DatabaseExample
+  auth={true}
+  code={`\nconsole.log(await zkdb.db("zkdb_test").info());`}
+/>
+
+#### Returns
+
+- A promise that resolves to a `TDatabaseInfoResponse` object containing the database's public key and Merkle tree height.
+
+```json
+{
+  "databaseName": "zkdb_test",
+  "databaseOwner": "chiro-user",
+  "merkleHeight": 64,
+  "appPublicKey": "",
+  "sizeOnDisk": null,
+  "deployStatus": "Unknown"
+}
+```

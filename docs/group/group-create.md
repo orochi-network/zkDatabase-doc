@@ -1,0 +1,46 @@
+---
+sidebar_position: 1
+---
+
+# Create Group
+
+The group creation functionality enables the organization and management of documents within a database by grouping them under specified categories. This can help facilitate access control, permissions management, and operations organization within a Zero-Knowledge Database (zkDatabase).
+
+### Syntax
+
+The `create` method is used to create a new group within a specified database, adding structure and categorization to the database.
+
+```javascript
+await zkdb.database(databaseName: string).group(groupName: string).create({ groupDescription: string});
+```
+
+### Parameters
+
+- **`groupName`**: `string` - The name of the new group to be created. This identifier categorizes a set of collections or documents under a common label for easier management.
+- **`groupDescription`**: `string` - A textual description of the group, providing insight into its purpose or the type of documents it is intended to encompass. This description aids in understanding the role and context of the group within the database.
+
+### Returns
+
+- A promise that resolves when the group is successfully created in the database.
+
+#### Example
+
+```javascript
+await zkdb.database('my_db').group('test').create({groupDescription: 'My first test group'});
+```
+#### Important Notes
+
+- **Owner-Only Operation**: Only the database owner has the permissions required to create a group. Ensure that your application logic checks user roles and ownership before attempting to call `createGroup`.
+
+- **Unique Group Names**: Group names must be unique within the database. Attempting to create a group with a duplicate name will result in an error.
+
+### Use Case: Managing Permissions with Groups
+
+Creating groups is essential for managing permissions effectively in a database. By grouping users based on their roles or responsibilities, you can simplify permission management by assigning permissions at the group level rather than individually for each user.
+
+For example, you might create groups such as "Admins", "Editors", or "Viewers" and assign them varying levels of access to different collections or documents. This approach enhances both security and ease of management.
+
+### Summary
+
+The `createGroup` method in zkDatabase provides a powerful way to manage user permissions by grouping users within a database. This method is restricted to database owners, ensuring that only authorized users can modify group structures and permissions, thus maintaining the integrity and security of the database.
+
