@@ -23,6 +23,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Prepare build time environment
+        env:
+          DEV_ENV_VARS: ${{ secrets.DEV_ENV_VARS }}
+        run: echo $DEV_ENV_VARS | base64 -d >> .env
       - name: Build image
         uses: docker/build-push-action@v5
         env:
