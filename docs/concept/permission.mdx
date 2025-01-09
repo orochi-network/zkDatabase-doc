@@ -1,0 +1,199 @@
+---
+sidebar_position: 1
+---
+
+# Permission
+
+## Overview
+
+The zkDatabase Permission System is inspired by the GNU/Linux file system's permission model. It divides users into three primary categories: `owner`, `group`, and `other`, each with distinct permission sets. This structure allows for fine-grained control over access to documents and collections, enabling efficient management of security and access rights.
+
+### Permission Model Breakdown
+
+#### 1. Owner
+
+- The `owner` of a document or collection has the highest level of control.
+- Owners can configure, modify, or delete the document/collection.
+
+#### 2. Group
+
+- A `group` is a set of users who share the same permission configuration.
+- The group can have restricted or extended access based on how permissions are configured for that group.
+
+#### 3. Other
+
+- The `other` category includes all users who do not belong to either the `owner` or the `group`.
+- These users have the most limited permissions and can only access documents/collections as permitted by the system.
+
+## Permission Types
+
+Permissions are defined at different levels based on user types (`owner`, `group`, and `other`). These are the core permission fields:
+
+- **Read**: The ability to view or retrieve the content of the document/collection.
+- **Write**: The ability to modify or update the content.
+- **Delete**: The ability to remove the document/collection.
+- **System**: Special permissions related to system-level operations, such as management tasks.
+
+### Permissions Order
+
+The **order** of permissions in the zkDatabase Permission System affects the bit positions in the permission value, which is stored as a bitmask. Each permission type is assigned a specific order and corresponds to a bit in the permission number:
+
+- **Read**: Order 0 (bit 0)
+- **Write**: Order 1 (bit 1)
+- **Delete**: Order 2 (bit 2)
+- **System**: Order 3 (bit 3)
+
+### How It Works with Bitwise Operations:
+
+- **Setting a permission**: Use the bitwise OR (`|`) operator to set a specific bit. For example, to enable **Write** permission, use:
+  ```ts
+  permission = permission | (1 << 1); // Enable Write
+  ```
+- **Checking a permission**: Use the bitwise AND (`&`) operator. For example, to check if **Delete** is enabled:
+  ```ts
+  hasDeletePermission = (permission & (1 << 2)) !== 0; // Check Delete
+  ```
+- **Disabling a permission**: Use bitwise AND with negation (`~`) to clear a bit. For example, to disable **System** permission:
+  ```ts
+  permission = permission & ~(1 << 3); // Disable System
+  ```
+
+The order determines the bit's position in the bitmask, making permission checks and modifications efficient.
+
+## Permission Model Structure
+
+### Types and Constants
+
+- **PermissionType**: Refers to the three user categories — `owner`, `group`, and `other`.
+- **OwnershipType**: Specifies the ownership categories — `owner` and `group`.
+- **PermissionField**: Represents the different permission types available — `write`, `read`, `delete`, `system`.
+
+### PermissionRecord
+
+Permissions are recorded using a boolean value for each of the permission fields. The `PermissionRecord` type maps permission types to boolean values, where each field (write, read, delete, system) is either enabled or disabled.
+
+```typescript
+type PermissionRecord = {
+  [k in PermissionRecordKey]: boolean;
+};
+```
+
+### PermissionDetail
+
+The `PermissionDetail` type aggregates `PermissionRecord` for each user category — `owner`, `group`, and `other`.
+
+```typescript
+type PermissionDetail = {
+  [key in PermissionType]: PermissionRecord;
+};
+```
+
+### Ownership and Permissions
+
+The `Ownership` type represents who owns the document or collection, while `OwnershipAndPermission` combines ownership with a numeric permission value. The permission value is a bitmask, where different bits represent various permissions.
+
+```typescript
+type Ownership = {
+  [key in OwnershipType]: string;
+};
+```
+
+## Setting Permissions
+
+### Setting Permissions for Each User Type
+
+Permissions can be configured for `owner`, `group`, and `other` individually. Each permission (read, write, delete, system) is set as `true` or `false` for each category.
+
+For instance, setting the `write` permission for the `owner`:
+
+```typescript
+permission.owner.write = true;
+```
+
+### Combining Permissions
+
+Permissions can be combined using a bitwise OR operation. The `combine()` method allows the merging of two permission sets.
+
+```typescript
+const combinedPermission = permission1.combine(permission2);
+```
+
+## Predefined Policies
+
+zkDatabase includes predefined policies for common scenarios:
+
+### 1. **Strict Policy**
+
+Gives full control to the `owner`, and no access to `group` and `other`.
+
+```typescript
+static policyStrict(): Permission {
+  return Permission.from({
+    owner: { read: true, write: true, delete: true, system: true },
+  });
+}
+```
+
+### 2. **Private Policy**
+
+The `owner` has full access, while the `group` has only read access, and `other` has no permissions.
+
+```typescript
+static policyPrivate(): Permission {
+  return Permission.from({
+    owner: { read: true, write: true, delete: true, system: true },
+    group: { read: true, write: false, delete: false, system: false },
+  });
+}
+```
+
+### 3. **Public Policy**
+
+The `owner` has full access, the `group` can read and write, and `other` can only read.
+
+```typescript
+static policyPublic(): Permission {
+  return Permission.from({
+    owner: { read: true, write: true, delete: true, system: true },
+    group: { read: true, write: true, delete: false, system: false },
+    other: { read: true, write: false, delete: false, system: false },
+  });
+}
+```
+
+## Example Use Cases
+
+### Scenario 1: Collaborative Project
+
+- **Owner**: A user who creates and fully controls a document.
+- **Group**: A team of users who can view and edit the document, but cannot delete it.
+- **Other**: General users who can only view the document.
+
+**Solution**: Set up the `owner` with full permissions, the `group` with read and write access, and `other` with only read permissions using the `policyPublic()`.
+
+### Scenario 2: Private Data Sharing
+
+- **Owner**: A user who maintains complete control over the document.
+- **Group**: A set of users who are allowed to view the document but not modify it.
+- **Other**: No access.
+
+**Solution**: Set up the `owner` with full permissions, the `group` with read-only access, and `other` with no access using the `policyPrivate()`.
+
+## Best Practices
+
+- **Minimize Permission Exposure**: Only grant `other` permissions when necessary to reduce the exposure of sensitive data.
+- **Use Groups Wisely**: Ensure that permissions for the `group` are appropriately set to avoid unintentional privilege escalation.
+- **Regular Audits**: Regularly review permissions for documents and collections to ensure they align with current business needs.
+
+## Security Considerations
+
+- **Bitwise Protection**: By using bitwise operations, the system ensures efficient and secure permission checks, preventing unauthorized access.
+- **Granular Control**: The system allows fine-grained control over what each user can do with a document or collection.
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Permission Not Applying Correctly**: Ensure that the permissions are correctly set for the intended user category (owner, group, other).
+2. **Permissions Overridden**: Check if a policy or permission inheritance is overriding your settings.
+3. **Access Denied Despite Correct Permissions**: Double-check for typos or misconfigurations in the permission setup. Ensure the correct permission fields are enabled.

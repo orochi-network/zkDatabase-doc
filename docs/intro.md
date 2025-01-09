@@ -4,50 +4,26 @@ sidebar_position: 1
 
 # Introduction
 
-Discover the power of zkDatabase as a Service.
+**zkDatabase** is a pioneering solution from [Orochi Network](https://orochi.network) that combines modern noSQL database architecture with advanced cryptographic techniques to ensure provable data integrity and privacy. At its core, zkDatabase leverages Zero-Knowledge Proofs (ZKP) to allow data queries and transactions to be verified without revealing the underlying data itself.
 
-## Getting Started
+zkDatabase's engine relies on a Zero-Knowledge Prover, ensuring that all data transactions can be cryptographically verified. This prover supports a range of zkSNARKs (Zero-Knowledge Succinct Non-Interactive Arguments of Knowledge), providing concise proofs that are computationally efficient to verify. The first version of zkDatabase is built on the o1js framework developed by [O1 Labs](https://www.o1labs.org/). This integration allows for seamless incorporation of zkSNARKs within the database, leveraging the robust and efficient prover implementations that o1js offers.
 
-Begin your journey with zkDatabase by understanding its core features and setting up a simple example.
+zkDatabase is designed with a modular architecture, allowing for the integration of multiple proof systems in the future. Planned support includes advanced proof systems like [Plonky3](https://polygon.technology/plonky3), which offers faster proof generation and improved scalability.
 
-### What you'll need
+## Architecture
 
-- Node.js version 18.0 or higher
-- The `o1js` library
-- A basic understanding of Zero-Knowledge Proofs (ZKP), the `o1js` library, and NoSQL databases
+- **Modern noSQL:** The database is built on a noSQL framework, ensuring flexibility, scalability, and high performance. It supports a wide range of data models, including key-value, document, and graph-based structures.
 
-## Create a new instance of zkDatabase
+- **Cryptographic Modules:** zkDatabase includes specialized cryptographic modules that handle the generation and verification of ZKPs. These modules are optimized for performance, ensuring minimal overhead in proof generation and verification processes.
 
-To create a new zkDatabase instance and get started, follow these steps:
+## Use Cases
 
-1. Install zkDatabase SDK: Use npm to install the zkDatabase SDK in your project:
+- **Web3 Integration**: zkDatabase is fully compatible with decentralized applications (dApps), providing a secure and private data layer for blockchain-based ecosystems. It supports smart contract verification and on-chain data integrity.
 
-```bash
-npm install zkdb
-```
+- **Enterprise Applications**: Traditional industries can leverage zkDatabase for secure and verifiable data management. Use cases include financial services (KYC/AML), healthcare (patient data privacy), and supply chain (product authenticity).
 
-This command initializes your project with the necessary dependencies to interact with zkDatabase as a Service. 
+- **Data Privacy and Security**: With its robust ZKP-based verification, zkDatabase ensures that data remains confidential while still being verifiable, making it suitable for any application requiring high standards of data integrity and privacy.
 
-## Start using zkDatabase
+zkDatabase represents a significant advancement in database technology, providing a cryptographically secure means of ensuring data integrity without compromising privacy. Its modular design and future-proof architecture make it a versatile solution for both Web3 and traditional enterprise applications.
 
-To start using zkDatabase, you’ll first need to configure your connection settings and initialize the database in your application. Here’s how:
-
-```ts
-import {zkdb} from 'zkdb';
-
-await zkdb.auth.signIn('test@gmail.com');
-```
-
-This code snippet demonstrates how to set up a connection to zkDatabase, configure Zero-Knowledge Proof options, and initialize a connection to your zkDatabase service.
-
-## What Can zkDatabase Do?
-
-zkDatabase as a Service provides a robust, scalable platform for managing data with verifiability and privacy at its core. Here's what you can do with zkDatabase:
-
-- User Authentication and Management: Implement secure user authentication with built-in support for Zero-Knowledge Proofs.
-
-- Data Privacy and Verifiability: Ensure data privacy and verifiability by offloading complex proving tasks to the server.
-
-- Efficient Data Handling: Optimize data retrieval and storage in a distributed environment using MongoDB Atlas Clusters.
-
-- Standardized GUI Interface: Simplify data management with a user-friendly graphical interface for interacting with zkDatabase.
+_Built with ❤️ any TypeScript_

@@ -1,0 +1,47 @@
+---
+sidebar_position: 4
+---
+
+import { DatabaseExample, EXAMPLE_DOCUMENT_FIND } from "@site/src/dynamic";
+
+# Find Document
+
+The `findOne` and `findMany` methods are used to retrieve documents from a collection in a Zero-Knowledge Database (zkDatabase). These methods allow querying the database based on specified criteria, supporting both single document fetches and bulk retrievals.
+
+### Definition
+
+The `findOne` function retrieves a single document that matches the given filter criteria, while the `findMany` function fetches all documents that match the filter.
+
+```ts
+await collection.findOne(filter: Record<string, any> | undefined): Promise<Document>;
+await collection.findMany(filter: Record<string, any> | undefined, pagination?: TPagination): Promise<TPaginationReturn<Document[]>>;
+```
+
+### Parameters
+
+- **`filter`**: `Record<string, any>` - An object representing the criteria to be used for filtering documents within the collection. Each key-value pair corresponds to a document field and the desired value for that field (e.g., `{ name: 'Test Shirt' }`).
+- **`pagination`**: `TPagination` - An optional object that specifies pagination parameters for the query. This can be used to retrieve a subset of documents based on their position in the collection (e.g: `{ limit: 5, offset: 0 }`).
+
+### Returns
+
+- **`findOne`**: Returns a `Promise` that resolves to a single `Document` object if a matching document is found. If no document matches the criteria, it may resolve to `null` or `undefined`.
+- **`findMany`**: Returns a `Promise` that resolves to an array of `TPaginationReturn<Document[]>` objects, representing all documents that match the given filter. The array will be empty if no documents match the criteria.
+
+```ts
+type TPaginationReturn<T> = {
+  data: T;
+  total: number;
+  offset: number;
+};
+```
+
+### Example
+
+Here is an example demonstrating how to use `findOne` and `findMany` to retrieve documents from a collection:
+
+<DatabaseExample
+import={`import { CircuitString, UInt64 } from 'o1js';
+import { Schema, ZkDatabase, Permission } from './index';`}
+auth={true}
+code={EXAMPLE_DOCUMENT_FIND}
+/>

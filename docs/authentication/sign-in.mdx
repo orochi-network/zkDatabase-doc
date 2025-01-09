@@ -1,0 +1,52 @@
+---
+sidebar_position: 2
+---
+
+import { DatabaseExample } from "@site/src/dynamic";
+
+# Sign-In
+
+The `signIn` method is used to authenticate an existing user in zkDatabase. The user must sign in using their email, and the signing process is validated using the previously provided signer.
+
+### Definition
+
+```ts
+await zkdb.auth.signIn(): Promise<TUserSignInResponse>;
+```
+
+### Parameters
+
+- None
+
+### Returns
+
+- A promise that resolves when the user is successfully authenticated.
+
+```ts
+export type TUserSignInResponse = {
+  userName: string;
+  email: string;
+  publicKey: string;
+  activated: boolean;
+  userData: Record<string, any> | null;
+  accessToken: string;
+};
+```
+
+### Example
+
+In this example, the signIn method authenticates the user with the username `chiro-user`.
+
+<DatabaseExample code={`\nconsole.log(await zkdb.auth.signIn());`} />
+
+Result:
+
+```json
+{
+  "userName": "chiro-user",
+  "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImNoaXJvLXVzZXIiLCJlbWFpbCI6ImNoaXJvQGV4YW1wbGUuY29tIiwiZXhwIjoyMjU2ODQ1OTY2MDF9.-Y4kSFSazvgMfIUIgl1wwgMAe33-UAWm45D4RaERvkk",
+  "userData": {},
+  "publicKey": "B62qqAHb9dveVJY58GUGjL6CfCBDJL5DmUcUpkAA71pLTYCYxHzJVVG",
+  "email": "chiro@example.com"
+}
+```

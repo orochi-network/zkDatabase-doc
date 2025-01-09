@@ -1,0 +1,30 @@
+---
+sidebar_position: 1
+---
+
+import { DatabaseExample, DatabaseGuiLink } from "@site/src/dynamic";
+
+# Create a Database
+
+You have two ways to work with zkDatabase: fully off-chain or using an on-chain rollup. Choosing the fully off-chain option keeps things simple, with no additional setup required. However, if you opt for the on-chain rollup, you'll need to create a database and deploy a smart contract on the Mina Protocol blockchain.
+
+The on-chain smart contract is responsible for managing the database’s cryptographic state. Once the smart contract is deployed and the transaction is confirmed, you can register the database with the zkDatabase service by providing the public key and relevant metadata, such as the database name and Merkle tree height.
+
+Let’s begin by exploring the fully off-chain database option.
+
+### Example
+
+<DatabaseExample
+  auth={true}
+  code={`\nif (!(await zkdb.db('zkdb_test').exist())) {
+    console.log(await zkdb.db('zkdb_test').create({ merkleHeight: 64 }));
+}`}
+/>
+
+### Parameters
+
+- **`merkleHeight`** (Number): The height of the Merkle tree that will represent the database's state. A larger Merkle height allows the database to handle more entries, but increases the cost of maintaining the tree.
+
+## Deploy Smart Contract
+
+You may need to user the <DatabaseGuiLink /> to deploy the smart contract to perform on-chain rollup.
