@@ -4,13 +4,31 @@ import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
 import tailwindPlugin from "./plugins/tailwind-config.cjs";
 
-const config: Config = {
+export type TCustomField = {
+  ZKDATABASE_GRAPHQL_ENDPOINT: string;
+  ZKDATABASE_GUI: string;
+};
+
+export type TDocConfig = Config & { customFields: TCustomField };
+
+const isProductionBuild = process.env.BUILD_MODE === "production";
+
+const config: TDocConfig = {
   title: "zkDatabase",
   tagline: "Orochi Network",
   favicon: "img/zklogo.svg",
-
+  customFields: {
+    ZKDATABASE_GRAPHQL_ENDPOINT: isProductionBuild
+      ? "https://api.zkdatabase.org/graphql"
+      : "https://test-serverless.zkdatabase.org/graphql",
+    ZKDATABASE_GUI: isProductionBuild
+      ? "https://app.zkdatabase.org/"
+      : "https://test-ui.zkdatabase.org/",
+  },
   // Set the production url of your site here
-  url: "https://your-docusaurus-site.example.com",
+  url: isProductionBuild
+    ? "https://test-doc.zkdatabase.org/"
+    : "https://doc.zkdatabase.org/",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/",
