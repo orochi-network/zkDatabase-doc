@@ -1,23 +1,21 @@
 import Link from "@docusaurus/Link";
 import CodeBlock from "@theme/CodeBlock";
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
+import { TCustomField } from "@site/docusaurus.config";
 
-const isProductionBuild = process.env.BUILD_MODE === "production";
-
-export const ZKDATABASE_GRAPHQL_ENDPOINT = isProductionBuild
-  ? "https://api.zkdatabase.org/graphql"
-  : "https://test-serverless.zkdatabase.org/graphql";
-
-export const ZKDATABASE_GUI = isProductionBuild
-  ? "https://app.zkdatabase.org/"
-  : "https://test-ui.zkdatabase.org/";
-
-const ZKDATABASE_CODE = `const zkdb = await ZkDatabase.connect({
-  userName: "chiro-user",
-  privateKey: "EKFTciRxyxshZjimay9sktsn7v5PvmC5zPq7q4JnitHUytxUVnFP",
-  environment: "node",
-  // This URL is for test environment
-  url: "${ZKDATABASE_GRAPHQL_ENDPOINT}",
-});`;
+export const useZKDatabaseCode = () => {
+  const {
+    siteConfig: { customFields },
+  } = useDocusaurusContext();
+  const { ZKDATABASE_GRAPHQL_ENDPOINT } = customFields;
+  return `const zkdb = await ZkDatabase.connect({
+    userName: "chiro-user",
+    privateKey: "EKFTciRxyxshZjimay9sktsn7v5PvmC5zPq7q4JnitHUytxUVnFP",
+    environment: "node",
+    // This URL is for test environment
+    url: "${ZKDATABASE_GRAPHQL_ENDPOINT}",
+  });`;
+};
 
 export const EXAMPLE_COLLECTION_CREATE = `//Create new group for user chiro-user
 await zkdb.db('zkdb_test').group('chiro').create({
@@ -117,6 +115,10 @@ listDoc.data.forEach((item) => {
 });`;
 
 export function DatabaseGuiLink() {
+  const {
+    siteConfig: { customFields },
+  } = useDocusaurusContext();
+  const { ZKDATABASE_GUI } = customFields as TCustomField;
   return (
     <Link
       href={ZKDATABASE_GUI}
@@ -130,6 +132,7 @@ export function DatabaseGuiLink() {
 
 export function DatabaseExample(props) {
   const { code, auth, import: imp } = props;
+  const ZKDATABASE_CODE = useZKDatabaseCode();
   const authenticated: boolean = auth ?? false;
   const imported = `${
     typeof props.import === "undefined"
