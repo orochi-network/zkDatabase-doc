@@ -1,0 +1,38 @@
+---
+sidebar_position: 2
+---
+
+import { DatabaseExample } from "@site/src/dynamic";
+
+# Get zkProofStatus
+
+The `zkProofStatus` method is used to retrieve the current status of a database's zk proof. This method helps track the progress of proof generation or identify any issues that may have occurred during the process.
+
+#### Method Signature
+
+```ts
+zkProofStatus(): Promise<TZkProofStatusResponse>;
+```
+
+#### Syntax
+
+<DatabaseExample
+  auth={true}
+  code={`\nconsole.log(await zkdb.db("zkdb_test").zkProofStatus());`}
+/>
+
+#### Returns
+
+- A promise that resolves to a `TZkProofStatusResponse`.
+
+The `TZkProofStatusResponse` enum contains the following structure:
+
+##### **TZkProofResponse**
+
+| **Status**   | **Description**                                                           |
+| ------------ | ------------------------------------------------------------------------- |
+| `Queued`     | The proof request has been queued and is waiting to be processed.         |
+| `Processing` | The proof request is currently being processed.                           |
+| `Failed`     | The proof request has failed due to an error or issue during generation.  |
+| `Success`    | The proof request has successfully completed and is ready for retrieval.  |
+| `Unknown`    | `The proof request status is unknown, possibly due to an zkProof is null. |
