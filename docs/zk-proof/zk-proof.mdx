@@ -1,0 +1,67 @@
+---
+sidebar_position: 1
+---
+
+import { DatabaseExample } from "@site/src/dynamic";
+
+# Get zkProof
+
+The `zkProof` method is designed to retrieve a JSON-formatted proof from Mina Protocol. This proof can be utilized to verify computations or data integrity without revealing sensitive information. The method supports cryptographic rollup steps for compressing multiple computations into a succinct proof.
+
+#### Method Signature
+
+```ts
+zkProof(): Promise<TZkProofResponse>;
+```
+
+#### Syntax
+
+<DatabaseExample
+  auth={true}
+  code={`\nconsole.log(await zkdb.db("zkdb_test").zkProof());`}
+/>
+
+#### Returns
+
+- A promise that resolves to a `TZkProofResponse`.
+
+The `TZkProofResponse` contains the following structure:
+
+##### **TZkProofResponse**
+
+| **Property** | **Type**    | **Description**                                                             |
+| ------------ | ----------- | --------------------------------------------------------------------------- |
+| `step`       | `bigint`    | Represents the rollup step or iteration number within the proof generation. |
+| `proof`      | `JsonProof` | A JSON object containing the generated zero-knowledge proof.                |
+
+##### **JsonProof**
+
+| **Field**           | **Type**   | **Description**                                             |
+| ------------------- | ---------- | ----------------------------------------------------------- |
+| `publicInput`       | `string[]` | An array of public inputs used in the proof generation.     |
+| `publicOutput`      | `string[]` | An array of public outputs derived from the proof.          |
+| `maxProofsVerified` | `number`   | The maximum number of proofs verified in the current proof. |
+| `proof`             | `string`   | The encoded proof data in a string format.                  |
+
+##### **Null Case**
+
+If no proof is available, the returned promise resolves to `null`. Ensure to handle this scenario appropriately in your implementation.
+
+```json
+{
+  step: 10n,
+  proof: {
+    publicInput: [
+      '9',
+      '25841764576285046988186167653748636396178872522546148714971399248557895316929',
+      '3947663588673285028481390057420318710802249460490724323846855806133396101815'
+    ],
+    publicOutput: [
+      '10',
+      '3947663588673285028481390057420318710802249460490724323846855806133396101815'
+    ],
+    maxProofsVerified: 1,
+    proof: 'KChzdGF0ZW1'... 22508 more characters
+  }
+}
+```
