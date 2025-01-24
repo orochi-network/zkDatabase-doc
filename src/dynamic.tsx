@@ -57,7 +57,7 @@ await collection.insert({
   price: 10n,
 });
 
-await collection.insert(
+const document = await collection.insert(
   {
     name: 'Orochi',
     price: 10n ** 9n,
