@@ -1,0 +1,60 @@
+---
+sidebar_position: 1
+---
+
+import { DatabaseExample } from "@site/src/dynamic";
+
+# Get Verification Key
+
+The `verificationKey` method allows you to retrieve important verification keys associated with specific contracts in the database. These keys include details like the Merkle tree height, key hashes, and raw encoded data. They are essential for verifying zero-knowledge proofs and understanding the cryptographic configuration of the system.
+
+#### Method Signature
+
+```ts
+verificationKey(): Promise<TVerificationKeyResponse>;
+```
+
+#### Syntax
+
+<DatabaseExample
+  auth={true}
+  code={`\nconsole.log(await zkdb.db("zkdb_test").verificationKey());`}
+/>
+
+#### Returns
+
+- A promise that resolves to a `TVerificationKeyResponse` or null if no verification keys are available.
+
+##### `TVerificationKeyResponse`
+
+This is a record mapping contract names `EContractName` to their corresponding verification key details `TZkDbVerificationKeyRecord`.
+
+##### `EContractName`
+
+| **Value** | **Description**                                           |
+| --------- | --------------------------------------------------------- |
+| Rollup    | Represents the verification key for rollup contracts.     |
+| Contract  | Represents the verification key for zkdb smart contracts. |
+
+```json
+{
+  "Contract": {
+    "contractName": "Contract",
+    "merkleHeight": 8,
+    "verificationKeyHash": "7d892b456151a3c95e27de7ef8fb3dfdfe2294b4d72d5c89e8e373005aa6358a",
+    "data": "AQFihNY9Eur2I...",
+    "hash": "11039021637501775772008318574453933091253743015110713939551628556211349714893",
+    "createdAt": "2025-01-21T17:16:38.294Z",
+    "updatedAt": "2025-01-21T17:16:38.294Z"
+  },
+  "Rollup": {
+    "contractName": "Rollup",
+    "merkleHeight": 8,
+    "verificationKeyHash": "53d15949c41469c0bc0942b87a7678a05517c03731c4a9a993a96f9bea87ceb3",
+    "data": "AQHwbVNVDjAVn...",
+    "hash": "9102873522666665449936385888808683444277565713030518648166535561287070859687",
+    "createdAt": "2025-01-21T17:16:38.294Z",
+    "updatedAt": "2025-01-21T17:16:38.294Z"
+  }
+}
+```
