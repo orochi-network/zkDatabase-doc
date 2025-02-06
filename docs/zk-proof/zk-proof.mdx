@@ -11,7 +11,7 @@ The `zkProof` method is designed to retrieve a JSON-formatted proof from Mina Pr
 #### Method Signature
 
 ```ts
-zkProof(): Promise<TZkProofResponse>;
+await zkdb.db(databaseName: string).zkProof(): Promise<TZkProofResponse>;
 ```
 
 #### Syntax
@@ -47,7 +47,7 @@ The `TZkProofResponse` contains the following structure:
 
 If no proof is available, the returned promise resolves to `null`. Ensure to handle this scenario appropriately in your implementation.
 
-```json
+```typescript
 {
   step: 10n,
   proof: {

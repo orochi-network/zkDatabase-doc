@@ -11,7 +11,7 @@ The `verificationKey` method allows you to retrieve important verification keys 
 #### Method Signature
 
 ```ts
-verificationKey(): Promise<TVerificationKeyResponse>;
+verificationKey(): Promise<VerificationKey | null>;
 ```
 
 #### Syntax
@@ -23,38 +23,12 @@ verificationKey(): Promise<TVerificationKeyResponse>;
 
 #### Returns
 
-- A promise that resolves to a `TVerificationKeyResponse` or null if no verification keys are available.
+- A promise that resolves to a [`VerificationKey`](https://docs.minaprotocol.com/zkapps/o1js-reference/classes/VerificationKey) or `null` if no verification keys are available.
 
-##### `TVerificationKeyResponse`
-
-This is a record mapping contract names `EContractName` to their corresponding verification key details `TZkDbVerificationKeyRecord`.
-
-##### `EContractName`
-
-| **Value** | **Description**                                           |
-| --------- | --------------------------------------------------------- |
-| Rollup    | Represents the verification key for rollup contracts.     |
-| Contract  | Represents the verification key for zkdb smart contracts. |
-
-```json
+```typescript
 {
-  "Contract": {
-    "contractName": "Contract",
-    "merkleHeight": 8,
-    "verificationKeyHash": "7d892b456151a3c95e27de7ef8fb3dfdfe2294b4d72d5c89e8e373005aa6358a",
-    "data": "AQFihNY9Eur2I...",
-    "hash": "11039021637501775772008318574453933091253743015110713939551628556211349714893",
-    "createdAt": "2025-01-21T17:16:38.294Z",
-    "updatedAt": "2025-01-21T17:16:38.294Z"
-  },
-  "Rollup": {
-    "contractName": "Rollup",
-    "merkleHeight": 8,
-    "verificationKeyHash": "53d15949c41469c0bc0942b87a7678a05517c03731c4a9a993a96f9bea87ceb3",
-    "data": "AQHwbVNVDjAVn...",
-    "hash": "9102873522666665449936385888808683444277565713030518648166535561287070859687",
-    "createdAt": "2025-01-21T17:16:38.294Z",
-    "updatedAt": "2025-01-21T17:16:38.294Z"
-  }
+  data: 'AQHwbVNVDjA...m0fMy4=',
+  hash: Field { value: [ 0, [Array] ] }
 }
+
 ```
