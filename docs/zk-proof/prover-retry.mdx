@@ -1,0 +1,87 @@
+---
+sidebar_position: 3
+---
+
+import { DatabaseExample, EXAMPLE_DOCUMENT_INSERT } from "@site/src/dynamic";
+
+# Detect and retry failed operations
+
+## Query for the current prover status
+
+You can check the status of Merkle proof and ZK proof generation for your
+database using the `proverStatus` method on an `IDatabase` object. This method
+returns the current processing status of both operations. If either operation
+fails, this method will return `Failed`.
+
+### Definition
+
+```ts
+database.proverStatus(): Promise<EQueueTaskStatus>;
+```
+
+### Parameters
+- None
+
+### Returns
+
+The operation returns a `Promise` that resolves to the status of the prover
+operations for your database. The status can be one of the following:
+
+- `EQueueTaskStatus.Queued`: There exists queued tasks ready to be processed in
+the operation queue for your database.
+- `EQueueTaskStatus.Processing`: The prover is currently processing queued
+tasks in the operation queue for your database.
+- `EQueueTaskStatus.Success`: The prover has successfully processed all queued
+tasks in the operation queue for your database.
+- `EQueueTaskStatus.Failed`: There exists a failed task in the operation queue
+for your database. This status also indicates that subsequent operations on the
+database will be blocked until corrective action is taken.
+- `EQueueTaskStatus.Unknown`: The queue's status cannot be determined. This
+should only occur if there is an underlying issue with the zkDatabase.
+
+### Example
+
+<DatabaseExample
+  auth={true}
+  code={`
+console.log(await zkdb.db("zkdb_test").proverStatus());
+`}
+/>
+
+## Retry failed operations
+
+If the prover status returns `Failed`, you can retry the failed operation using
+the `proverRetry` method on an `IDatabase` object. This method will attempt to
+queue the failed operation for processing again.
+
+### Definition
+
+```ts
+database.proverRetry(): Promise<boolean>;
+```
+
+### Parameters
+- None
+
+### Returns
+
+This method returns a `Promise` that resolves to a boolean value. The return
+value indicates whether the latest failed operation was successfully queued for
+retry. If no failed operations exist, the method returns `false`.
+
+### Example
+
+<DatabaseExample
+  auth={true}
+  code={`
+const database = zkdb.db("zkdb_test");
+
+let status;
+while ((status = await database.proverStatus()) !== EQueueTaskStatus.Success) {
+    if (status === EQueueTaskStatus.Failed) {
+        console.log("Retrying failed operation:", await database.proverRetry());
+    }
+    await new Promise(resolve => setTimeout(resolve, 1000));
+}
+`}
+/>
