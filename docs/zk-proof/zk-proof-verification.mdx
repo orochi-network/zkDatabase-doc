@@ -1,0 +1,79 @@
+---
+sidebar_position: 3
+---
+
+import { DatabaseExample } from "@site/src/dynamic";
+
+# Verify zkProof
+
+The `zkProofVerify` method is designed to verify a zero-knowledge proof. This method confirms that the provided proof is both correctly constructed and authentic without exposing any underlying sensitive data. It returns key details such as the current rollup step, the Merkle root computed from the underlying data structure, and a boolean indicator of the proof's validity.
+
+#### Method Signature
+
+```ts
+await zkdb.db(databaseName: string).zkProofVerify(): Promise<TZkDbProofVerify>;
+```
+
+#### Syntax
+
+<DatabaseExample auth={true} code={`\n
+// Create new instance of 'db_test'
+const dbTest = zkdb.db('db_test');
+/**
+ * To verify zkProof, you have 2 options
+ * 1. Using our 'zkProofVerify()'
+ * 2. Using o1js 'verify()'
+ */
+
+// 1. Using zkdb 'zkProofVerify' method
+/**
+ * Basically it a wrapper that handle
+ * get verification key, get zkProof
+ * and verify from o1js to user
+ * You just simply call it
+ * */
+console.log(await dbTest.zkProofVerify());
+
+// 2. Using o1js 'verify()'
+/**
+ * To verify using o1js, all you need is 'zkProof' and 'verificationKey'
+ * Firstly, get verification key by calling 'verificationKey()'
+ * Secondly, get zkProof by calling 'zkProof()'
+ * Lastly, call the 'verify()' from o1js
+ * */
+
+// Get verification key to verify
+const verificationKey = await dbTest.verificationKey();
+
+// Get zkProof to verify the proof
+const zkProof = await dbTest.zkProof();
+
+// Make sure we have both verification zkProof
+if (verificationKey && zkProof) {
+  // Verify proof via 'verify' method from o1js
+  console.log('Is proof valid:', await verify(zkProof.proof, verificationKey));
+}`} />
+
+
+
+#### Returns
+
+- A promise that resolves to a `TZkDbProofVerify` object.
+
+The `TZkDbProofVerify` contains the following structure:
+
+##### **TZkProofResponse**
+
+| **Property** | **Type**    | **Description**                                                                              |
+| ------------ | ----------- | ---------------------------------------------------------------------------------------------|
+| `step`       | `bigint`    | 	Represents the rollup step or iteration number associated with the proof verification.      |
+| `merkleRoot` | `string`    | The Merkle root computed from the underlying data, ensuring data integrity.                  |
+| `valid`      | `boolean`   | A boolean value that indicates whether the provided proof is valid (true) or invalid (false).|
+
+```typescript
+{
+  step: 10n,
+  merkleRoot: "15383398803871485586427167108754689270190633959576017615536369378087055779186",
+  valid: true
+}
+```
