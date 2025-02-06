@@ -7,10 +7,10 @@ import { DatabaseExample, EXAMPLE_DOCUMENT_INSERT } from "@site/src/dynamic";
 
 # Merkle Tree
 
-After obtaining a `Document` instance, you can utilize its merkle tree-related
-methods to examine and verify the current state of the merkle tree.
+After obtaining a `Document` instance, you can utilize these methods to examine
+and verify the current state of the merkle tree.
 
-## Get merkle proof status for a document
+## Get the merkle proof status for a document
 
 After performing a document-related operation (create, update, or drop), the
 document must be queued for the next merkle tree update. You can verify the
@@ -20,8 +20,11 @@ on a `Document` object.
 ### Definition
 
 ```ts
-await document.merkleProofStatus();
+await document.merkleProofStatus(): Promise<EQueueTaskStatus>;
 ```
+
+### Parameters
+- None
 
 ### Returns
 
@@ -37,6 +40,8 @@ incorporated into the merkle tree.
 - `EQueueTaskStatus.Failed`: The document processing has failed and is not
 included in the merkle tree. This status also indicates that subsequent
 operations on the document will be blocked until corrective action is taken.
+Refer to [Detect and retry failed operations](../zk-proof/prover-retry.mdx) for
+more information on how to handle failure.
 - `EQueueTaskStatus.Unknown`: The document's status cannot be determined. This
 should only occur if there is an underlying issue with the zkDatabase.
 
@@ -59,7 +64,7 @@ console.assert([
 ].includes(status))`}
 />
 
-## Get merkle proof for a document
+## Get the merkle proof for a document
 
 Once you've confirmed that the document's merkle tree proof status is
 `Success`, you can retrieve its merkle proof using the `merkleProof` method on
@@ -69,8 +74,11 @@ correspond to an empty node.
 ### Definition
 
 ```ts
-await document.merkleProof();
+await document.merkleProof(): Promise<TMerkleProof>;
 ```
+
+### Parameters
+- None
 
 ### Returns
 
@@ -94,7 +102,11 @@ import { Schema, ZkDatabase, Permission } from './index';
 import { EQueueTaskStatus } from '@zkdb/common'`}
 code={`${EXAMPLE_DOCUMENT_INSERT}
 
-while (await document.merkleProofStatus() !== EQueueTaskStatus.Success) {
+let status;
+while ((status = await document.merkleProofStatus()) !== EQueueTaskStatus.Success) {
+    if (status === EQueueTaskStatus.Failed) {
+        throw new Error('Document processing failed');
+    }
     await new Promise(resolve => setTimeout(resolve, 1000));
 }
 
