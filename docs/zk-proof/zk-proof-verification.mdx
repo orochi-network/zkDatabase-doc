@@ -16,7 +16,10 @@ await zkdb.db(databaseName: string).zkProofVerify(): Promise<TZkDbProofVerify>;
 
 #### Syntax
 
-<DatabaseExample auth={true} code={`\n/**
+<DatabaseExample auth={true} code={`\n
+// Create new instance of 'db_test'
+const dbTest = zkdb.db('db_test');
+/**
  * To verify zkProof, you have 2 options
  * 1. Using our 'zkProofVerify()'
  * 2. Using o1js 'verify()'
