@@ -16,7 +16,7 @@ fails, this method will return `Failed`.
 ### Definition
 
 ```ts
-database.proverStatus(): Promise<EQueueTaskStatus>;
+await zkdb.db(databaseName: string).proverStatus(): Promise<EQueueTaskStatus>;
 ```
 
 ### Parameters
@@ -57,7 +57,7 @@ queue the failed operation for processing again.
 ### Definition
 
 ```ts
-database.proverRetry(): Promise<boolean>;
+await zkdb.db(databaseName: string).proverRetry(): Promise<EQueueTaskStatus>;
 ```
 
 ### Parameters
