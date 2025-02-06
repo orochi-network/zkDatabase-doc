@@ -13,7 +13,7 @@ The `userAdd` method allows you to add a list of users to a database or group. T
 ### Definition
 
 ```ts
-await zkdb.database(databaseName: string).group('group-name').userAdd(listUser: string[]);
+await zkdb.db(databaseName: string).group('group-name').userAdd(listUser: string[]);
 ```
 
 ### Parameters
@@ -27,7 +27,7 @@ await zkdb.database(databaseName: string).group('group-name').userAdd(listUser: 
 ### Example
 
 ```ts
-const result = await zkdb.database('my-db')
+const result = await zkdb.db('my-db')
   .group('group-name')
   .userAdd(['alice', 'bob', 'charlie']);
 
@@ -38,7 +38,7 @@ if (result) {
 }
 ```
 
-In this example, the users `alice`, `bob`, and `charlie` are added to the my-db database. The method returns `true` if the operation is successful, or `false` if it fails.
+In this example, the users `alice`, `bob`, and `charlie` are added to the `my-db` database. The method returns `true` if the operation is successful, or `false` if it fails.
 
 ## userRemove: Removing Users from a Group
 
@@ -47,7 +47,7 @@ The `userRemove` method allows you to remove a list of users from a group of dat
 ### Definition
 
 ```ts
-await zkdb.database(databaseName: string).group(groupName: string).userRemove(listUser: string[]);
+await zkdb.db(databaseName: string).group(groupName: string).userRemove(listUser: string[]);
 ```
 
 ### Parameters
@@ -61,7 +61,7 @@ await zkdb.database(databaseName: string).group(groupName: string).userRemove(li
 ### Example
 
 ```ts
-const result = await zkdb.database('my-db')
+const result = await zkdb.db('my-db')
   .group('group-name')
   .userRemove(['alice', 'bob']);
  
@@ -72,7 +72,7 @@ if (result) {
 }
 ```
 
-In this example, the users `alice`, `bob` are removed from the my-db database. The method returns true if the operation is successful, or false if it fails.
+In this example, the users `alice`, `bob` are removed from the `my-db` database. The method returns true if the operation is successful, or false if it fails.
 
 ## Important Notes
 
