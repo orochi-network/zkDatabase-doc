@@ -60,59 +60,8 @@ const config: TDocConfig = {
 
   plugins: [tailwindPlugin],
 
-  headTags: [
-    {
-      tagName: "meta",
-      attributes: {
-        property: "og:title",
-        content: "zkDatabase",
-      },
-    },
-    {
-      tagName: "meta",
-      attributes: {
-        property: "og:description",
-        content:
-          "zkDatabase is the world first verifiable database for the new internet",
-      },
-    },
-    {
-      tagName: "meta",
-      attributes: {
-        property: "og:image",
-        content: "/img/thumbnail.png",
-      },
-    },
-    {
-      tagName: "meta",
-      attributes: {
-        name: "twitter:card",
-        content: "summary_large_image",
-      },
-    },
-    {
-      tagName: "meta",
-      attributes: {
-        name: "twitter:title",
-        content: "zkDatabase",
-      },
-    },
-    {
-      tagName: "meta",
-      attributes: {
-        name: "twitter:description",
-        content:
-          "zkDatabase is the world first verifiable database for the new internet.",
-      },
-    },
-    {
-      tagName: "meta",
-      attributes: {
-        name: "twitter:image",
-        content: "/img/thumbnail.png",
-      },
-    },
-  ],
+  // meta in headTags will override those in themeConfig
+  headTags: [],
   presets: [
     [
       "classic",
@@ -149,30 +98,8 @@ const config: TDocConfig = {
 
   themeConfig: {
     image: "img/thumbnail.png",
-    // metadata: [
-    //   { name: "description", content: "Your site description" },
-    //   { property: "og:title", content: "zkDatabase" },
-    //   {
-    //     property: "og:description",
-    //     content:
-    //       "zkDatabase is the world first verifiable database for the new internet",
-    //   },
-    //   {
-    //     property: "og:image",
-    //     content: "img/thumbnail.png",
-    //   },
-    //   { property: "twitter:card", content: "summary_large_image" },
-    //   { property: "twitter:title", content: "zkDatabase" },
-    //   {
-    //     property: "twitter:description",
-    //     content:
-    //       "zkDatabase is the world first verifiable database for the new internet",
-    //   },
-    //   {
-    //     property: "twitter:image",
-    //     content: "img/thumbnail.png",
-    //   },
-    // ],
+    // if twitter: doesn't specified it will fall back to using og:
+    metadata: [],
     navbar: {
       title: "zkDatabase",
       logo: {
