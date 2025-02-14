@@ -98,6 +98,7 @@ const config: TDocConfig = {
 
   themeConfig: {
     image: "img/thumbnail.png",
+    // if twitter: doesn't specified it will fall back to using og:
     metadata: [],
     navbar: {
       title: "zkDatabase",
