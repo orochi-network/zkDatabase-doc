@@ -98,53 +98,7 @@ const config: TDocConfig = {
 
   themeConfig: {
     image: "img/thumbnail.png",
-    metadata: [
-      // { property: "og:title", content: "zkDatabase" },
-      // {
-      //   property: "og:description",
-      //   content:
-      //     "zkDatabase is the world first verifiable database for the new internet",
-      // },
-      // {
-      //   property: "og:image",
-      //   content: "img/thumbnail.png",
-      // },
-      // {
-      //   property: "og:image:type",
-      //   content: "image/png",
-      // },
-      // {
-      //   property: "og:image:width",
-      //   content: "1200",
-      // },
-      // {
-      //   property: "og:image:height",
-      //   content: "630",
-      // },
-      // { name: "twitter:card", content: "summary_large_image" },
-      // { name: "twitter:title", content: "zkDatabase" },
-      // {
-      //   name: "twitter:description",
-      //   content:
-      //     "zkDatabase is the world first verifiable database for the new internet",
-      // },
-      // {
-      //   name: "twitter:image",
-      //   content: "img/thumbnail.png",
-      // },
-      // {
-      //   name: "twitter:image:type",
-      //   content: "image/png",
-      // },
-      // {
-      //   name: "twitter:image:width",
-      //   content: "1200",
-      // },
-      // {
-      //   name: "twitter:image:height",
-      //   content: "630",
-      // },
-    ],
+    metadata: [],
     navbar: {
       title: "zkDatabase",
       logo: {
