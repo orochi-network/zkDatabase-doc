@@ -1,0 +1,76 @@
+---
+sidebar_position: 3
+title: "Create your first provable database"
+---
+
+import { DatabaseExample } from "@site/src/dynamic";
+
+# Tutorial: Create a provable database
+
+:::info
+This tutorial will guide you to interact with our zkDatabase
+:::
+
+## What are you building? 
+
+In this tutorial, you'll create an provable database and how to interact using our SDK
+
+After we setup successfully, we get `zkdb` is a instance of `zkDatabase`. If you don't know how to setup, please check (!this)[] first
+
+### Create database 
+Let's create database call `library`, we will assigned it to `dbLibrary` for reusing multiple times instead of `zkdb.db('library')` each call
+
+```ts
+const dbLibrary = zkdb.db('library')
+```
+{/* TODO: Explain what merkle tree, why merkle tree and how we use merkle tree */}
+We need to check it existed or not before create database. We also need to input merkle height 
+
+```ts
+if (!(await dbLibrary.exist())) {
+  await dbLibrary.create({ merkleHeight: 32 });
+}
+```
+
+This `create()` method return `Promise<boolean>` to perform the result of database create success or not, refer to [Database create](/docs/guide/database/database-create.mdx)
+
+
+### Create collection 
+
+Collection is a grouping of documents
+
+#### Define Schema
+
+Before create we need to specify a schema that dictates the structure and data types of the documents
+
+{/*  TODO: We also need to define schema since it an api from our zkdb, we need to documentation about it*/}
+
+In this case, we'll define schema called `Book`, our prototype structure will be:
+
+```
+Book {
+  name: string
+  author: string
+  release: number 
+}
+```
+
+We need to use `Schema.create()` to create a schema based on that prototype, you can check [Schema](https://www.google.com/)
+
+```ts
+class Book extends Schema.create({
+  name: CircuitString,
+  author: CircuitString,
+  release: UInt32,
+}) {}
+
+export type TBook = typeof Book;
+```
+{/* TODO: Define which o1js provable we will supported, prevent user passing wrong*/}
+These field `name`, `author`, `release` received type from `o1js` .For example, [CircuitString](https://docs.minaprotocol.com/zkapps/o1js-reference/classes/CircuitString), [UInt32](https://docs.minaprotocol.com/zkapps/o1js-reference/classes/UInt32),... that zkdb supported
+
+Now we can create collection
+
+```ts
+const collectionBook = dbLibrary.collection<TBook>('book');
+```

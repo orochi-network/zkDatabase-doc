@@ -58,7 +58,17 @@ const config: TDocConfig = {
     locales: ["en"],
   },
 
-  plugins: [tailwindPlugin],
+  plugins: [
+    tailwindPlugin,
+    [
+      require.resolve("docusaurus-plugin-search-local"),
+      {
+        // `hashed` is recommended as long-term-cache of index file is possible.
+        hashed: true,
+        docsRouteBasePath: "/",
+      },
+    ],
+  ],
 
   // meta in headTags will override those in themeConfig
   headTags: [],
@@ -69,6 +79,11 @@ const config: TDocConfig = {
         docs: {
           sidebarPath: "./sidebars.ts",
           routeBasePath: "/",
+          remarkPlugins: [
+            [require("@docusaurus/remark-plugin-npm2yarn"), { sync: true }],
+          ],
+          showLastUpdateTime: true,
+          showLastUpdateAuthor: true,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           // editUrl:
@@ -127,7 +142,7 @@ const config: TDocConfig = {
         {
           position: "right",
           label: "Get started",
-          to: "/",
+          to: "/getting-started/installation",
           className:
             "button button--primary button--lg text-white text-size-sm font-bold pr-[20px]",
           style: { color: "white" },
@@ -153,7 +168,7 @@ const config: TDocConfig = {
             },
             {
               label: "Get started",
-              to: "https://test-app.zkdatabase.org",
+              to: "https://test-app.zkdatabase.org/getting-started/installation",
             },
           ],
         },

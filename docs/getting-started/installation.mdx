@@ -1,0 +1,58 @@
+---
+sidebar_position: 1
+title: "Installation"
+custom_edit_url: https://github.com/facebook/docusaurus/edit/main/docs/api-doc-markdown.md
+last_update:
+  author: Chiro
+---
+
+import { DatabaseExample } from "@site/src/dynamic";
+
+# Installation
+
+Welcome to **zkDatabase**, a cutting-edge NoSQL database by Orochi Network that provides provable data integrity through Zero-Knowledge Proofs (ZKP). This guide will walk you through the installation process, including setting up the SDK and its required peer dependencies.
+
+---
+
+## 1. Prerequisites
+
+Before you begin, make sure you have the following:
+
+### Hardware
+- A machine with at least **8GB of RAM**.
+
+### Operating System
+- **Linux**, **macOS**, or **Windows**.
+
+### Software Dependencies
+- **Node.js**: v18 or later.
+- **npm**: v10 or later or **Yarn** (legacy mode).
+
+### Peer Dependencies
+- **o1js** package (recommended version: `^2.2.0`)
+- **mina-signer** package (version: `3.0.7`) **or** a wallet like [Auro Wallet](https://www.aurowallet.com/)
+
+> **Note:**  
+> A basic understanding of Zero-Knowledge Proofs (ZKP), the `o1js` library, and NoSQL databases is recommended.
+
+---
+
+## 2. Installing zkDatabase
+
+zkDatabase SDK is available as an [npm package](https://www.npmjs.com/package/zkdb). To install it in your project, run the following command:
+
+```bash npm2yarn
+npm install zkdb
+```
+
+This command installs the main package. Ensure that you also have the required peer dependencies installed in your project. If they’re not already present, install them as follows:
+
+### Installing Peer Dependencies
+
+```bash npm2yarn
+npm install o1js mina-signer
+```
+
+:::info
+If your project already includes these dependencies, verify that the installed versions satisfy the required versions.
+:::
