@@ -1,0 +1,80 @@
+---
+sidebar_position: 3
+---
+
+import { DatabaseExample } from "@site/src/dynamic";
+
+# Getting Started
+
+Welcome to zkDatabase, a cutting-edge NoSQL database designed by Orochi Network to provide provable data integrity utilizing Zero-Knowledge Proofs (ZKP). This guide will help you get started with setting up and using zkDatabase.
+
+## Requirements
+
+Before you begin, ensure you have the following installed:
+
+- **Node.js** v18 or later
+- **npm** v10 or later (or Yarn)
+
+### Recommended Knowledge
+
+A basic understanding of:
+- NoSQL databases concepts
+- TypeScript/JavaScript async/await patterns
+- A basic understanding of Zero-Knowledge Proofs 
+
+## Installation
+
+zkDatabase SDK is provided as [a npm package](https://www.npmjs.com/package/zkdb), you need to install the zkDatabase SDK in your project:
+
+```bash
+npm install zkdb @zkdb/common
+```
+
+or
+
+```bash
+npm install zkdb @zkdb/common
+```
+
+This command initializes your project with the necessary dependencies to interact with zkDatabase as a Service.
+
+## Start using zkDatabase
+
+### Obtain an API Key
+
+To use zkDatabase, you need to obtain an API key from the zkDatabase Management tool. This API key will be used to authenticate your requests to the zkDatabase service.
+
+### Connect to zkDatabase endpoint
+
+To start interacting with zkDatabase you must create an instance with your API key and the service URL:
+
+```typescript
+import { ZkDatabase } from 'zkdb';
+
+const zkdb = new ZkDatabase({
+  apiKey: 'your-api-key',
+  url: 'https://test-serverless.zkdatabase.org/graphql',
+});
+```
+
+From now on, assumed that we have an instance of zkDatabase and it called `zkdb`.
+
+### Working with Result Types
+
+The zkDatabase SDK uses a Result pattern for error handling. All async operations return a Result type that can be either `Ok` or `Err`:
+
+```typescript
+// Using unwrap() - throws if error
+const info = (await zkdb.db('my_db').info()).unwrap();
+
+// Using isOk() and isErr() for checking
+const result = await zkdb.db('my_db').exist();
+if (result.isOk()) {
+  console.log('Database exists:', result.unwrap());
+} else {
+  console.log('Error:', result.unwrapErr().message);
+}
+
+// Using unwrapOr() for default values
+const exists = (await zkdb.db('my_db').exist()).unwrapOr(false);
+```

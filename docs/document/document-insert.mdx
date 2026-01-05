@@ -10,29 +10,25 @@ The zkDatabase library provides the `insert` method to add new documents to a sp
 
 ### Definition
 
-The `insert` function is called on a collection object, with the first parameter being the document to insert and an optional second parameter for permissions.
+The `insert` function is called on a collection object, with the parameter being the document to insert.
 
 ```ts
-await zkdb.db(databaseName: string)
-  .collection(collectionName: string)
-  .insert(document: Document, permission?: Permission): Promise<TDocumentCreateResponse>;
+const docId = (await zkdb.db(databaseName)
+  .collection<SchemaType>(collectionName)
+  .insert(document)).unwrap();
 ```
 
 ### Parameters
   - `document`: The object containing the data to be inserted into the collection. It should match the schema of the collection.
-  - `permission` (Optional): A permission policy object that defines how the document insertion is exposed in terms of security or access control.
 
 ### Returns
 
-The function returns a `Promise` that resolves to an `TDocumentCreateResponse`, which can provide details regarding the outcome of the insertion, including the success status or identifiers for the new document.
+The function returns a `Result` that contains the document ID upon successful insertion. Use `.unwrap()` to get the value or check with `.isOk()` / `.isErr()`.
 
 ### Example
 
-The example shows how to insert a document into the collection both with and without specifying a permission policy.
+The example shows how to insert documents into the collection.
 
 <DatabaseExample
-import={`import { CircuitString, UInt64 } from 'o1js';
-import { Schema, ZkDatabase, Permission } from './index';`}
-auth={true}
 code={EXAMPLE_DOCUMENT_INSERT}
 />

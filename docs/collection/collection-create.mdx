@@ -17,36 +17,40 @@ The zkDatabase library provides the functionality to create a collection, which 
 When creating a collection, you need to specify a schema that dictates the structure and data types of the documents. This schema ensures that all documents within the collection are consistent and integrate seamlessly with cryptographic operations.
 
 ```ts
-await zkdb.db(databaseName: string)
-    .collection(collectionName: string)
-    .create(
-      schemaDefinition:Schema,
-      permission: Permission,
-      groupName: string
-    )
+const schema = new Schema([
+  { name: 'fieldName', kind: 'FieldType' },
+  // ... more fields
+]);
+
+const result = await zkdb.db(databaseName)
+    .collection<SchemaType>(collectionName)
+    .create(schema, permission, groupName);
 ```
+
+### Schema Definition
+
+Schemas are created using the `Schema` class from `@zkdb/common`. Available field types include:
+
+- `CircuitString` - For text fields
+- `UInt32`, `UInt64` - For unsigned integers
+- `Int64` - For signed integers
+- `Bool` - For boolean values
+- `Field` - For raw field elements
 
 ### Parameters
 
-- **`schemaDefinition`** (Schema): The predefined structure for the collection, detailing the data types and constraints for its documents, ensuring they meet both usability and cryptographic integrity standards.
-- **`permission`** (Permission): A object that defines the permissions for accessing and manipulating the collection, ensuring proper security measures are met.
-- **`groupName`** (string): The name of the group associated with this collection. It helps categorize or restrict collections to specific groups of users, supporting both organizational needs and security policies.
+- **`schema`** (Schema): The predefined structure for the collection, detailing the data types and constraints for its documents.
+- **`permission`** (Permission): A object that defines the permissions for accessing and manipulating the collection.
+- **`groupName`** (string): The name of the group associated with this collection.
 
 ### Returns
 
-The operation to create a collection will typically return a promise that resolves upon successful establishment of the collection with its specified schema. This confirmation allows for subsequent operations, such as document insertion and queries.
+The operation returns a `Result` that resolves upon successful establishment of the collection. Use `.unwrap()` to get the value or check with `.isOk()` / `.isErr()`.
 
 ### Example
 
 Here is an example of creating a collection in the zkDatabase:
 
 <DatabaseExample
-  import={`import { CircuitString, UInt64 } from 'o1js';
-import { Schema, ZkDatabase } from 'zkdb';`}
-  auth={true}
   code={EXAMPLE_COLLECTION_CREATE}
 />
-
-## Deploy Smart Contract
-
-To incorporate this collection into a blockchain-based application, you may need to use the <DatabaseGuiLink /> to deploy the appropriate smart contract. This enables on-chain management of the collection, ensuring data integrity and supporting zero-knowledge proofs.

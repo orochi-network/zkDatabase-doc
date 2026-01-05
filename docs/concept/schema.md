@@ -4,99 +4,106 @@ sidebar_position: 4
 
 # Schema
 
-The `Schema` class in zkDatabase represent for database document in ZK circuit. It provides functionality for serialization, deserialization, and hashing of documents. The `Schema` class leverages the [Struct](https://docs.minaprotocol.com/zkapps/tutorials/common-types-and-functions#struct) class from the `o1js` library to create documents that have cryptographic proof capabilities.
+The `Schema` class in zkDatabase represents a database document structure that can be used in zero-knowledge circuits. It provides functionality for serialization, deserialization, and hashing of documents, ensuring that all documents are compatible with zkDatabase's Groth16 proof system.
 
 ## Key Concepts of Schema
 
-1. **Struct from `o1js`**:
+1. **Structured Documents**:
 
-- The Schema class uses `Struct` from `o1js` to define documents. A `Struct` is a data structure that specifies fields and their types, ensuring that each document adheres to a defined schema.
+- The Schema class defines documents with specific fields and their types, ensuring that each document adheres to a defined structure.
 
 - This ensures that all documents created within zkDatabase are compatible with zero-knowledge proof systems, allowing them to be serialized, deserialized, and hashed securely.
 
 2. **Provable Types**:
 
-- The schema supports only provable types—data types that can be used in cryptographic proofs. These types are part of the o1js library and include `CircuitString`, `UInt32`, `UInt64`, `Bool`, `Sign`, `Character`, `Int64`, `Field`, `PrivateKey`, `PublicKey`, `Signature`, and `MerkleMapWitness`.
+- The schema supports provable types—data types that can be used in cryptographic proofs. These types include `CircuitString`, `UInt32`, `UInt64`, `Bool`, `Int64`, and `Field`.
 
-- By restricting documents to provable types, zkDatabase ensures that all data stored is compatible with the cryptographic protocols used in zkApps.
+- By restricting documents to provable types, zkDatabase ensures that all data stored is compatible with the cryptographic protocols used for zero-knowledge proofs.
 
 ### Supported Provable Types in zkDatabase
 
-The supported provable types and their corresponding classes in `o1js` are as follows:
+The supported provable types are as follows:
 
 - **CircuitString**: A string type that can be used in ZK circuits.
 - **UInt32**, **UInt64**: Unsigned integers of 32 and 64 bits.
 - **Int64**: Signed 64-bit integer.
 - **Bool**: Boolean value (true/false).
-- **Sign**: Represents a sign value (+1 or -1).
-- **Character**: Represents a single character.
 - **Field**: Represents a finite field element used in zk circuits.
-- **PrivateKey**, **PublicKey**: Cryptographic keys used for signing.
-- **Signature**: A cryptographic signature.
-- **MerkleMapWitness**: Represents a Merkle proof; however, it is currently not supported for document serialization/deserialization in zkDatabase.
 
 ### Creating a Schema
 
-To define a document schema in zkDatabase, you use the `Schema.create` method. This method takes a type definition (a mapping of field names to their types) and an optional list of indexed fields.
+To define a document schema in zkDatabase, you use the `Schema` class from `@zkdb/common`. You create a schema by providing an array of field definitions, each specifying the field name and its type.
 
 **Example: Creating a Schema for a Document**
 
 ```ts
-import { CircuitString, UInt64 } from "o1js";
-import { Schema } from "zkdb";
+import { Schema, SchemaToObject } from "@zkdb/common";
 
-class Shirt extends Schema.create({
-  name: CircuitString,
-  price: UInt64,
-}) {}
+const ShirtSchema = new Schema([
+  { name: 'name', kind: 'CircuitString' },
+  { name: 'price', kind: 'UInt64' },
+]);
+
+// TypeScript type for the schema
+type TShirt = SchemaToObject<ReturnType<typeof ShirtSchema.schemaDefinition>>;
 ```
 
-In this example, the `Shirt` schema defines a document with two fields: `name` (a `CircuitString`) and `price` (a `UInt64`). These fields are provable types from `o1js`, ensuring compatibility with zk circuits.
+In this example, the `ShirtSchema` defines a document with two fields: `name` (a `CircuitString`) and `price` (a `UInt64`). These fields are provable types, ensuring compatibility with zkDatabase's proof system.
+
+### Available Field Types
+
+When defining a schema, you can use the following `kind` values:
+
+- `'CircuitString'`: A string type that can be used in ZK circuits.
+- `'UInt32'`, `'UInt64'`: Unsigned integers of 32 and 64 bits.
+- `'Int64'`: Signed 64-bit integer.
+- `'Bool'`: Boolean value (true/false).
+- `'Field'`: Represents a finite field element used in zk circuits.
 
 ### Working with Documents
 
-Documents created using the `Schema` class can be serialized, deserialized, and hashed. These operations are critical for maintaining data integrity and security within zkDatabase.
+Documents inserted using the schema can be retrieved and manipulated. The zkDatabase SDK handles serialization and deserialization automatically.
 
-#### Serialization
-
-The `serialize` method converts a document into an encoded format (`TSchemaSerializedField[]`) that can be stored or transmitted.
+#### Inserting a Document
 
 ```ts
-import { CircuitString, UInt64 } from "o1js";
-import { Schema } from "zkdb";
+import { Schema, SchemaToObject } from "@zkdb/common";
+import { ZkDatabase } from "zkdb";
 
-class Shirt extends Schema.create({
-  name: CircuitString,
-  price: UInt64,
-}) {}
+const ShirtSchema = new Schema([
+  { name: 'name', kind: 'CircuitString' },
+  { name: 'price', kind: 'UInt64' },
+]);
 
-const shirt = new Shirt({
-  name: CircuitString.fromString("Orochi"),
-  price: UInt64.from(12),
+type TShirt = SchemaToObject<ReturnType<typeof ShirtSchema.schemaDefinition>>;
+
+const zkdb = new ZkDatabase({
+  apiKey: 'your-api-key',
+  url: 'https://test-serverless.zkdatabase.org/graphql',
 });
 
-const encodedShirt = shirt.serialize();
-console.log(encodedShirt);
+const collection = zkdb.db('my_db').collection<TShirt>('shirts');
+
+// Insert a document
+const docId = (await collection.insert({
+  name: 'Orochi',
+  price: 12n,
+})).unwrap();
+
+console.log('Inserted document ID:', docId);
 ```
 
-#### Deserialization
-
-The `deserialize` method reconstructs a document from its encoded format, converting it back into its original form.
+#### Finding a Document
 
 ```ts
-const decodedShirt = Shirt.deserialize(encodedShirt);
-console.log(decodedShirt);
-```
+// Find a document
+const doc = (await collection.findOne({ name: 'Orochi' })).unwrap();
 
-#### Hashing
-
-The `hash` method compute poseidon hash of the document, which can be used to verify its integrity and construct Merkle tree.
-
-```ts
-const hash = shirt.hash();
-console.log(hash.toString());
+if (doc) {
+  console.log('Found:', doc.document);
+}
 ```
 
 ## Summary
 
-The `Schema` class in zkDatabase provides a robust method for defining, managing, and securing documents using provable types from o1js. With support for serialization, deserialization, hashing the schema system ensures that all data stored in zkDatabase is ready for use in secure and verifiable zkApps.
+The `Schema` class in zkDatabase provides a robust method for defining, managing, and securing documents using provable types. With support for serialization, deserialization, and hashing, the schema system ensures that all data stored in zkDatabase is ready for use with zero-knowledge proofs.

@@ -8,71 +8,70 @@ In zkDatabase, managing users within a group or database is an essential part of
 
 ## userAdd: Adding Users to Group
 
-The `userAdd` method allows you to add a list of users to a database or group. This is useful for granting users access to specific resources within the zkDatabase.
+The `userAdd` method allows you to add a list of users to a group. This is useful for granting users access to specific resources within the zkDatabase.
 
 ### Definition
 
 ```ts
-await zkdb.db(databaseName: string).group('group-name').userAdd(listUser: string[]);
+const result = await zkdb.db(databaseName).group('group-name').userAdd(userNames);
 ```
 
 ### Parameters
 
-- **`listUser`** `string[]`: An array of usernames that you want to add to the database or group. Each username must be a valid, registered user in the system.
+- **`userNames`** `string[]`: An array of usernames that you want to add to the group.
 
 ### Returns
 
-- A promise that resolves to true if all users were successfully added, or false if the operation failed.
+- A `Result` that can be checked with `.isOk()` / `.isErr()`.
 
 ### Example
 
 ```ts
-const result = await zkdb.db('my-db')
-  .group('group-name')
-  .userAdd(['alice', 'bob', 'charlie']);
+const dbTest = zkdb.db('my-db');
+const editorsGroup = dbTest.group('editors');
 
-if (result) {
-  console.log('Users successfully added to the database.');
-} else {
-  console.log('Failed to add users.');
+// Add users to group
+const users = (await dbTest.userList()).unwrap();
+if (users.data.length > 0) {
+  const userNames = users.data.map((u) => u.userName).slice(0, 2);
+  (await editorsGroup.userAdd(userNames)).unwrap();
+  console.log('Added users:', userNames);
 }
 ```
-
-In this example, the users `alice`, `bob`, and `charlie` are added to the `my-db` database. The method returns `true` if the operation is successful, or `false` if it fails.
 
 ## userRemove: Removing Users from a Group
 
-The `userRemove` method allows you to remove a list of users from a group of database. This is useful for revoking access when a user is no longer authorized.
+The `userRemove` method allows you to remove a list of users from a group. This is useful for revoking access when a user is no longer authorized.
 
 ### Definition
 
 ```ts
-await zkdb.db(databaseName: string).group(groupName: string).userRemove(listUser: string[]);
+const result = await zkdb.db(databaseName).group(groupName).userRemove(userNames);
 ```
 
 ### Parameters
 
-- **`userNames`** (Array of Strings): An array of usernames that you want to remove from the database or group.
+- **`userNames`** (Array of Strings): An array of usernames that you want to remove from the group.
 
 ### Returns
 
-- A promise that resolves to `true` if all users were successfully removed, or `false` if the operation failed.
+- A `Result` that can be checked with `.isOk()` / `.isErr()`.
 
 ### Example
 
 ```ts
-const result = await zkdb.db('my-db')
-  .group('group-name')
-  .userRemove(['alice', 'bob']);
- 
-if (result) {
-  console.log('Users successfully removed from the database.');
+const dbTest = zkdb.db('my-db');
+const editorsGroup = dbTest.group('editors');
+
+// Remove users from group
+const result = await editorsGroup.userRemove(['alice', 'bob']);
+
+if (result.isOk()) {
+  console.log('Users successfully removed.');
 } else {
-  console.log('Failed to remove users.');
+  console.log('Failed to remove users:', result.unwrapErr().message);
 }
 ```
-
-In this example, the users `alice`, `bob` are removed from the `my-db` database. The method returns true if the operation is successful, or false if it fails.
 
 ## Important Notes
 

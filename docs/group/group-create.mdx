@@ -10,23 +10,40 @@ The group creation functionality enables the organization and management of docu
 
 The `create` method is used to create a new group within a specified database, adding structure and categorization to the database.
 
-```javascript
-await zkdb.db(databaseName: string).group(groupName: string).create({ groupDescription: string});
+```typescript
+const dbTest = zkdb.db(databaseName);
+const group = dbTest.group(groupName);
+
+// Check if group exists before creating
+if (!(await group.exist()).unwrapOr(false)) {
+  (await group.create({ groupDescription: 'My group description' })).unwrap();
+}
 ```
 
 ### Parameters
 
-- **`groupName`**: `string` - The name of the new group to be created. This identifier categorizes a set of collections or documents under a common label for easier management.
-- **`groupDescription`**: `string` - A textual description of the group, providing insight into its purpose or the type of documents it is intended to encompass. This description aids in understanding the role and context of the group within the database.
+- **`groupName`**: `string` - The name of the new group to be created.
+- **`groupDescription`**: `string` - A textual description of the group.
 
 ### Returns
 
-- A promise that resolves when the group is successfully created in the database.
+- A `Result` that can be checked with `.isOk()` / `.isErr()` or unwrapped with `.unwrap()`.
 
 #### Example
 
-```javascript
-await zkdb.database('my_db').group('test').create({groupDescription: 'My first test group'});
+```typescript
+const dbTest = zkdb.db('my_db');
+const editorsGroup = dbTest.group('editors');
+
+// Create group if not exists
+if (!(await editorsGroup.exist()).unwrapOr(false)) {
+  (await editorsGroup.create({ groupDescription: 'Content editors' })).unwrap();
+  console.log('Group created');
+}
+
+// Get group info
+const info = (await editorsGroup.info()).unwrap();
+console.log('Group:', info);
 ```
 #### Important Notes
 

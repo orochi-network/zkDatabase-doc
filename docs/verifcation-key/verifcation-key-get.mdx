@@ -11,24 +11,19 @@ The `verificationKey` method allows you to retrieve important verification keys 
 #### Method Signature
 
 ```ts
-await zkdb.db(databaseName: string).verificationKey(): Promise<VerificationKey | null>;
+const verificationKey = (await zkdb.db(databaseName).verificationKey()).unwrap();
 ```
 
 #### Syntax
 
 <DatabaseExample
-  auth={true}
-  code={`\nconsole.log(await zkdb.db("zkdb_test").verificationKey());`}
+  code={`const dbTest = zkdb.db('zkdb_test');
+
+// Get verification key
+const verificationKey = (await dbTest.verificationKey()).unwrap();
+console.log('Verification key retrieved, length:', verificationKey);`}
 />
 
 #### Returns
 
-- A promise that resolves to a [`VerificationKey`](https://docs.minaprotocol.com/zkapps/o1js-reference/classes/VerificationKey) or `null` if no verification keys are available.
-
-```typescript
-{
-  data: 'AQHwbVNVDjA...m0fMy4=',
-  hash: Field { value: [ 0, [Array] ] }
-}
-
-```
+- A promise that resolves to a `VerificationKey` object or `null` if no verification keys are available.

@@ -6,25 +6,26 @@ import { DatabaseExample, DatabaseGuiLink } from "@site/src/dynamic";
 
 # Create a Database
 
-You have two ways to work with zkDatabase: fully off-chain or using an on-chain rollup. Choosing the fully off-chain option keeps things simple, with no additional setup required. However, if you opt for the on-chain rollup, you'll need to create a database and deploy a smart contract on the Mina Protocol blockchain.
+zkDatabase provides a simple way to create and manage databases with built-in zero-knowledge proof capabilities. Each database maintains a cryptographic state using Merkle trees, enabling provable data integrity.
 
-The on-chain smart contract is responsible for managing the database’s cryptographic state. Once the smart contract is deployed and the transaction is confirmed, you can register the database with the zkDatabase service by providing the public key and relevant metadata, such as the database name and Merkle tree height.
-
-Let’s begin by exploring the fully off-chain database option.
+Let's begin by exploring how to create a database.
 
 ### Example
 
 <DatabaseExample
-  auth={true}
-  code={`\nif (!(await zkdb.db('zkdb_test').exist())) {
-    console.log(await zkdb.db('zkdb_test').create({ merkleHeight: 64 }));
-}`}
+  code={`const dbTest = zkdb.db('zkdb_test');
+
+// Check if database exists
+const exists = (await dbTest.exist()).unwrapOr(false);
+
+if (!exists) {
+  (await dbTest.create()).unwrap();
+  console.log('Database created');
+} else {
+  console.log('Database already exists');
+}
+
+// Get database info
+const info = (await dbTest.info()).unwrap();
+console.log('Database:', info.databaseName, 'Owner:', info.databaseOwner);`}
 />
-
-### Parameters
-
-- **`merkleHeight`** (Number): The height of the Merkle tree that will represent the database's state. A larger Merkle height allows the database to handle more entries, but increases the cost of maintaining the tree.
-
-## Deploy Smart Contract
-
-You may need to user the <DatabaseGuiLink /> to deploy the smart contract to perform on-chain rollup.

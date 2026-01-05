@@ -11,8 +11,11 @@ The `info` method allows you to retrieve important settings related to a specifi
 #### Syntax
 
 <DatabaseExample
-  auth={true}
-  code={`\nconsole.log(await zkdb.db("zkdb_test").info());`}
+  code={`const dbTest = zkdb.db('zkdb_test');
+
+// Get database info
+const info = (await dbTest.info()).unwrap();
+console.log(info);`}
 />
 
 #### Returns
