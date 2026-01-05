@@ -6,9 +6,9 @@ sidebar_position: 1
 
 **zkDatabase** is a pioneering solution from [Orochi Network](https://orochi.network) that combines modern noSQL database architecture with advanced cryptographic techniques to ensure provable data integrity and privacy. At its core, zkDatabase leverages Zero-Knowledge Proofs (ZKP) to allow data queries and transactions to be verified without revealing the underlying data itself.
 
-zkDatabase's engine relies on a Zero-Knowledge Prover, ensuring that all data transactions can be cryptographically verified. This prover supports a range of zkSNARKs (Zero-Knowledge Succinct Non-Interactive Arguments of Knowledge), providing concise proofs that are computationally efficient to verify. The first version of zkDatabase is built on the o1js framework developed by [O1 Labs](https://www.o1labs.org/). This integration allows for seamless incorporation of zkSNARKs within the database, leveraging the robust and efficient prover implementations that o1js offers.
+zkDatabase's engine relies on a Zero-Knowledge Prover, ensuring that all data transactions can be cryptographically verified. The prover uses Groth16 zkSNARKs (Zero-Knowledge Succinct Non-Interactive Arguments of Knowledge), providing concise proofs that are computationally efficient to verify. This enables seamless incorporation of zero-knowledge proofs within the database, leveraging robust and efficient proof generation and verification.
 
-zkDatabase is designed with a modular architecture, allowing for the integration of multiple proof systems in the future. Planned support includes advanced proof systems like [Plonky3](https://polygon.technology/plonky3), which offers faster proof generation and improved scalability.
+zkDatabase is designed with a modular architecture, allowing for the integration of multiple proof systems in the future.
 
 ## Architecture
 
@@ -18,7 +18,7 @@ zkDatabase is designed with a modular architecture, allowing for the integration
 
 ## Use Cases
 
-- **Web3 Integration**: zkDatabase is fully compatible with decentralized applications (dApps), providing a secure and private data layer for blockchain-based ecosystems. It supports smart contract verification and on-chain data integrity.
+- **Web3 Integration**: zkDatabase is fully compatible with decentralized applications (dApps), providing a secure and private data layer with provable data integrity.
 
 - **Enterprise Applications**: Traditional industries can leverage zkDatabase for secure and verifiable data management. Use cases include financial services (KYC/AML), healthcare (patient data privacy), and supply chain (product authenticity).
 

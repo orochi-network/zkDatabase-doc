@@ -13,7 +13,8 @@ export type TCustomField = {
 
 export type TDocConfig = Config & { customFields: TCustomField };
 
-const buildMode = process.env.BUILD_MODE;
+const buildMode: TBuildMode =
+  (process.env.BUILD_MODE as TBuildMode) || "development";
 
 const customFields: Record<TBuildMode, TCustomField> = {
   production: {

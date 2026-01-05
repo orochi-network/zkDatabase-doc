@@ -11,7 +11,7 @@ import { DatabaseExample, EXAMPLE_DOCUMENT_UPDATE } from "@site/src/dynamic";
 This document focuses on the `update` method from a document object retrieved using ZkDatabase API. The `update` method is used to modify the fields of an existing document with new values provided in the form of an object.
 
 ```ts
-await document.update(updateFields: Record<string, any>);
+(await document.update(updateFields)).unwrap();
 ```
 
 ### Parameters
@@ -20,15 +20,12 @@ await document.update(updateFields: Record<string, any>);
 
 ### Returns
 
-The `update` method returns a promise that resolves when the update operation is completed successfully. It raises an error if the document cannot be updated due to validation or other operational issues.
+The `update` method returns a `Result` that can be checked with `.isOk()` / `.isErr()` or unwrapped with `.unwrap()`.
 
 ### Example
 
-Connect to the database, find a specific shirt document by name, and update its price:
+Connect to the database, find a specific document by name, and update its price:
 
 <DatabaseExample
-import={`import { CircuitString, UInt64 } from 'o1js';
-import { Schema, ZkDatabase, Permission } from './index';`}
-auth={true}
 code={EXAMPLE_DOCUMENT_UPDATE}
 />

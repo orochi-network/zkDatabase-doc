@@ -11,14 +11,17 @@ The `zkProofStatus` method is used to retrieve the current status of a database'
 #### Method Signature
 
 ```ts
-await zkdb.db(databaseName: string).zkProofStatus(): Promise<TZkProofStatusResponse>;
+const zkStatus = (await zkdb.db(databaseName).zkProofState()).unwrap();
 ```
 
 #### Syntax
 
 <DatabaseExample
-  auth={true}
-  code={`\nconsole.log(await zkdb.db("zkdb_test").zkProofStatus());`}
+  code={`const dbTest = zkdb.db('zkdb_test');
+
+// Get zkProof state
+const zkStatus = (await dbTest.zkProofState()).unwrap();
+console.log('ZK Proof state:', zkStatus);`}
 />
 
 #### Returns

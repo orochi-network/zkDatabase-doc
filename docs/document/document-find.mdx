@@ -13,19 +13,19 @@ The `findOne` and `findMany` methods are used to retrieve documents from a colle
 The `findOne` function retrieves a single document that matches the given filter criteria, while the `findMany` function fetches all documents that match the filter.
 
 ```ts
-await collection.findOne(filter: Record<string, any> | undefined): Promise<Document>;
-await collection.findMany(filter: Record<string, any> | undefined, pagination?: TPagination): Promise<TPaginationReturn<Document[]>>;
+const doc = (await collection.findOne(filter)).unwrap();
+const docs = (await collection.findMany(filter, pagination)).unwrap();
 ```
 
 ### Parameters
 
 - **`filter`**: `Record<string, any>` - An object representing the criteria to be used for filtering documents within the collection. Each key-value pair corresponds to a document field and the desired value for that field (e.g., `{ name: 'Test Shirt' }`).
-- **`pagination`**: `TPagination` - An optional object that specifies pagination parameters for the query. This can be used to retrieve a subset of documents based on their position in the collection (e.g: `{ limit: 5, offset: 0 }`).
+- **`pagination`**: `TPagination` - An optional object that specifies pagination parameters for the query (e.g: `{ limit: 5, offset: 0 }`).
 
 ### Returns
 
-- **`findOne`**: Returns a `Promise` that resolves to a single `Document` object if a matching document is found. If no document matches the criteria, it may resolve to `null` or `undefined`.
-- **`findMany`**: Returns a `Promise` that resolves to an array of `TPaginationReturn<Document[]>` objects, representing all documents that match the given filter. The array will be empty if no documents match the criteria.
+- **`findOne`**: Returns a `Result` containing a single document object if found, or `null` if no document matches.
+- **`findMany`**: Returns a `Result` containing a `TPaginationReturn<Document[]>` object with matching documents.
 
 ```ts
 type TPaginationReturn<T> = {
@@ -40,8 +40,5 @@ type TPaginationReturn<T> = {
 Here is an example demonstrating how to use `findOne` and `findMany` to retrieve documents from a collection:
 
 <DatabaseExample
-import={`import { CircuitString, UInt64 } from 'o1js';
-import { Schema, ZkDatabase, Permission } from './index';`}
-auth={true}
 code={EXAMPLE_DOCUMENT_FIND}
 />

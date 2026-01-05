@@ -11,47 +11,22 @@ The `zkProofVerify` method is designed to verify a zero-knowledge proof. This me
 #### Method Signature
 
 ```ts
-await zkdb.db(databaseName: string).zkProofVerify(): Promise<TZkDbProofVerify>;
+const verifyResult = (await zkdb.db(databaseName).zkProofVerify()).unwrap();
 ```
 
 #### Syntax
 
-<DatabaseExample auth={true} code={`\n
+<DatabaseExample code={`
 // Create new instance of 'db_test'
 const dbTest = zkdb.db('db_test');
-/**
- * To verify zkProof, you have 2 options
- * 1. Using our 'zkProofVerify()'
- * 2. Using o1js 'verify()'
- */
 
-// 1. Using zkdb 'zkProofVerify' method
-/**
- * Basically it a wrapper that handle
- * get verification key, get zkProof
- * and verify from o1js to user
- * You just simply call it
- * */
-console.log(await dbTest.zkProofVerify());
+// Verify zkProof using zkProofVerify()
+const verifyResult = await dbTest.zkProofVerify();
 
-// 2. Using o1js 'verify()'
-/**
- * To verify using o1js, all you need is 'zkProof' and 'verificationKey'
- * Firstly, get verification key by calling 'verificationKey()'
- * Secondly, get zkProof by calling 'zkProof()'
- * Lastly, call the 'verify()' from o1js
- * */
-
-// Get verification key to verify
-const verificationKey = await dbTest.verificationKey();
-
-// Get zkProof to verify the proof
-const zkProof = await dbTest.zkProof();
-
-// Make sure we have both verification zkProof
-if (verificationKey && zkProof) {
-  // Verify proof via 'verify' method from o1js
-  console.log('Is proof valid:', await verify(zkProof.proof, verificationKey));
+if (verifyResult.isErr()) {
+  console.log('Verification failed:', verifyResult.unwrapErr().message);
+} else {
+  console.log('zkProofVerify result:', verifyResult.unwrap());
 }`} />
 
 

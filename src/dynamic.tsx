@@ -8,107 +8,116 @@ export const useZKDatabaseCode = () => {
     siteConfig: { customFields },
   } = useDocusaurusContext();
   const { ZKDATABASE_GRAPHQL_ENDPOINT } = customFields;
-  return `const zkdb = await ZkDatabase.connect({
-    userName: "chiro-user",
-    privateKey: "EKFTciRxyxshZjimay9sktsn7v5PvmC5zPq7q4JnitHUytxUVnFP",
-    environment: "node",
-    // This URL is for test environment
-    url: "${ZKDATABASE_GRAPHQL_ENDPOINT}",
-  });`;
+  return `const zkdb = new ZkDatabase({
+  apiKey: 'your-api-key',
+  url: '${ZKDATABASE_GRAPHQL_ENDPOINT}',
+});`;
 };
 
-export const EXAMPLE_COLLECTION_CREATE = `//Create new group for user chiro-user
-await zkdb.db('zkdb_test').group('chiro').create({
-  groupDescription: 'Test group',
-});
+export const EXAMPLE_COLLECTION_CREATE = `// Define the schema for given collection
+const ShirtSchema = new Schema([
+  { name: 'name', kind: 'CircuitString' },
+  { name: 'price', kind: 'UInt64' },
+]);
 
-// Define the schema for given collection
-class Shirt extends Schema.create({
-  name: CircuitString,
-  price: UInt64,
-}) {}
+type TShirt = SchemaToObject<ReturnType<typeof ShirtSchema.schemaDefinition>>;
+
+const dbTest = zkdb.db('zkdb_test');
+
+// Ensure group exists
+const group = dbTest.group('chiro');
+if (!(await group.exist()).unwrapOr(false)) {
+  (await group.create({ groupDescription: 'Test group' })).unwrap();
+}
+
+// Define permissions
+const permissions = Permission.from({
+  owner: { read: true, write: true, delete: true, system: true },
+  group: { read: true, write: true, delete: false, system: false },
+  other: { read: true, write: false, delete: false, system: false },
+});
 
 // Create a new collection with the defined schema
-console.log(
-  await zkdb.db('zkdb_test')
-    .collection('test_collection')
-    .create(
-      Shirt,
-      Permission.policyPrivate(),
-      'chiro'
-    )
+const result = await dbTest.collection<TShirt>('test_collection').create(
+  ShirtSchema,
+  permissions,
+  'chiro'
 );
 
-console.log(await zkdb.db('zkdb_test').collection('test').create(Shirt));`;
-
-export const EXAMPLE_DOCUMENT_INSERT = `class Shirt extends Schema.create({
-  name: CircuitString,
-  price: UInt64,
-}) {}
-
-type TShirt = typeof Shirt;
-
-const collection = await zkdb
-  .db('zkdb_test')
-  .collection<TShirt>('test_collection');
-
-await collection.insert({
-  name: 'Test Shirt',
-  price: 10n,
-});
-
-const document = await collection.insert(
-  {
-    name: 'Orochi',
-    price: 10n ** 9n,
-  },
-  Permission.policyStrict()
-);`;
-
-export const EXAMPLE_DOCUMENT_UPDATE = `class Shirt extends Schema.create({
-  name: CircuitString,
-  price: UInt64,
-}) {}
-
-type TShirt = typeof Shirt;
-
-const collection = await zkdb
-  .db('zkdb_test')
-  .collection<TShirt>('test_collection');
-
-const doc = await collection.findOne({ name: 'Test Shirt' });
-
-if (doc) {
-  await doc.update({ price: 20n });
+if (result.isOk()) {
+  console.log('Collection created');
+} else {
+  console.log('Error:', result.unwrapErr().message);
 }`;
 
-export const EXAMPLE_DOCUMENT_DROP = `const collection = await zkdb.db('zkdb_test').collection('test_collection');
+export const EXAMPLE_DOCUMENT_INSERT = `const ShirtSchema = new Schema([
+  { name: 'name', kind: 'CircuitString' },
+  { name: 'price', kind: 'UInt64' },
+]);
 
-const doc = await collection.findOne({ name: 'Test Shirt' });
+type TShirt = SchemaToObject<ReturnType<typeof ShirtSchema.schemaDefinition>>;
 
-if (doc) {
-  await doc.drop();
-}
-`;
+const collection = zkdb.db('zkdb_test').collection<TShirt>('test_collection');
 
-export const EXAMPLE_DOCUMENT_FIND = `class Shirt extends Schema.create({
-  name: CircuitString,
-  price: UInt64,
-}) {}
+const docId1 = (await collection.insert({
+  name: 'Test Shirt',
+  price: 10n,
+})).unwrap();
+console.log('Inserted:', docId1);
 
-type TShirt = typeof Shirt;
+const docId2 = (await collection.insert({
+  name: 'Orochi',
+  price: 10n ** 9n,
+})).unwrap();
+console.log('Inserted:', docId2);`;
 
-const collection = await zkdb
-  .db('zkdb_test')
-  .collection<TShirt>('test_collection');
+export const EXAMPLE_DOCUMENT_UPDATE = `const ShirtSchema = new Schema([
+  { name: 'name', kind: 'CircuitString' },
+  { name: 'price', kind: 'UInt64' },
+]);
 
-const doc = await collection.findOne({ name: 'Test Shirt' });
+type TShirt = SchemaToObject<ReturnType<typeof ShirtSchema.schemaDefinition>>;
+
+const collection = zkdb.db('zkdb_test').collection<TShirt>('test_collection');
+
+const docs = (await collection.findMany({ name: 'Test Shirt' })).unwrap();
+
+if (docs.data.length > 0) {
+  const doc = docs.data[0];
+  (await doc.update({ price: 20n })).unwrap();
+  console.log('Updated successfully');
+}`;
+
+export const EXAMPLE_DOCUMENT_DROP = `const collection = zkdb.db('zkdb_test').collection('test_collection');
+
+const docs = (await collection.findMany({ name: 'Test Shirt' })).unwrap();
+
+if (docs.data.length > 0) {
+  const doc = docs.data[0];
+  const dropResult = await doc.drop();
+  if (dropResult.isOk()) {
+    console.log('Deleted successfully');
+  }
+}`;
+
+export const EXAMPLE_DOCUMENT_FIND = `const ShirtSchema = new Schema([
+  { name: 'name', kind: 'CircuitString' },
+  { name: 'price', kind: 'UInt64' },
+]);
+
+type TShirt = SchemaToObject<ReturnType<typeof ShirtSchema.schemaDefinition>>;
+
+const collection = zkdb.db('zkdb_test').collection<TShirt>('test_collection');
+
+// Find one document
+const doc = (await collection.findOne({ name: 'Test Shirt' })).unwrap();
 
 if (doc) {
   console.log(doc.document);
 }
 
-const listDoc = await collection.findMany(undefined, { limit: 10, offset: 0 });
+// Find many documents with pagination
+const listDoc = (await collection.findMany({}, { limit: 10, offset: 0 })).unwrap();
 
 listDoc.data.forEach((item) => {
   console.log(item.document);
@@ -131,17 +140,14 @@ export function DatabaseGuiLink() {
 }
 
 export function DatabaseExample(props) {
-  const { code, auth, import: imp } = props;
+  const { code } = props;
   const ZKDATABASE_CODE = useZKDatabaseCode();
-  const authenticated: boolean = auth ?? false;
   const imported = `${
     typeof props.import === "undefined"
-      ? "import { ZkDatabase } from 'zkdb';"
+      ? "import { Schema, SchemaToObject } from '@zkdb/common';\nimport { ZkDatabase, Permission } from 'zkdb';"
       : props.import
   }\n\n`;
-  const renderCode = authenticated
-    ? `\n\nawait zkdb.auth.signIn();\n\n${code}\n\nawait zkdb.auth.signOut();\n`
-    : `\n${code}\n`;
+  const renderCode = `\n${code}\n`;
   return (
     <div>
       <CodeBlock language="typescript">

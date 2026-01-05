@@ -18,10 +18,10 @@ The zkDatabase library provides the `collectionList` method to retrieve a list o
 
 ### Definition
 
-The `collectionList` function is called on a database object, and it returns a promise that resolves to an array of collections.
+The `collectionList` function is called on a database object, and it returns a Result that contains an array of collection names.
 
 ```typescript
-await zkdb.db(databaseName: string).collectionList(): Promise<string[]>;
+const collections = (await zkdb.db(databaseName).collectionList()).unwrap();
 ```
 
 ### Parameters
@@ -30,15 +30,16 @@ await zkdb.db(databaseName: string).collectionList(): Promise<string[]>;
 
 ### Returns
 
-The `collectionList` method returns a `Promise` that resolves to an array of `string`. Each string represents the name of a collection within the specified database. This list provides insights into the database's structure and can help in planning further operations or analyses.
+The `collectionList` method returns a `Result` that resolves to an array of `string`. Each string represents the name of a collection within the specified database.
 
 ### Example
 
 Here is an example demonstrating how to retrieve the list of collections from a specified database:
 
 <DatabaseExample
-  auth={true}
-  code={`\nawait zkdb.db('zkdb_test').collectionList()`}
+  code={`const dbTest = zkdb.db('zkdb_test');
+const collections = (await dbTest.collectionList()).unwrap();
+console.log('Collections:', collections);`}
 />
 
 This snippet, when executed, retrieves all collection names from the `zkdb_test` database.
